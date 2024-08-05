@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: ecommerceapp
+    env: docker
+    plan: free
+    dockerfilePath: ./ecommerceApp/Dockerfile
+    contextPath: ./ecommerceApp
+    autoDeploy: true
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 8080
