@@ -12,15 +12,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.web.ecommerce.security.JwtAuthenticationEntryPoint;
 import com.web.ecommerce.security.JwtAuthenticationFilter;
 
+import java.util.Arrays;
 
 @Configuration
 public class SecurityConfig {
 
-	@Autowired
+    @Autowired
     private JwtAuthenticationEntryPoint point;
     @Autowired
     private JwtAuthenticationFilter filter;
@@ -29,23 +33,34 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf -> csrf.disable())
-        	.cors(cors -> cors.disable())
-        	.authorizeHttpRequests(auth->auth.requestMatchers("/home/signup").permitAll())
-        	.authorizeHttpRequests(auth->auth.requestMatchers("/home/**")
-        			.authenticated().requestMatchers("/auth/login")
-        			.permitAll().anyRequest()
-        			.authenticated()).exceptionHandling(ex->ex.authenticationEntryPoint(point))
-        	.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .authorizeHttpRequests(auth -> auth.requestMatchers("/home/signup").permitAll())
+            .authorizeHttpRequests(auth -> auth.requestMatchers("/home/**")
+                    .authenticated().requestMatchers("/auth/login")
+                    .permitAll().anyRequest()
+                    .authenticated()).exceptionHandling(ex -> ex.authenticationEntryPoint(point))
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         
-        http.addFilterBefore(filter,UsernamePasswordAuthenticationFilter.class);
-                
+        http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+        
         return http.build();
     }
     
     @Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:4200")); // Add your allowed origins here
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+    
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
     
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception {
