@@ -34,7 +34,7 @@ public class CartItemController {
         return ResponseEntity.ok(createdCartItem);
     }
 
-    @PutMapping("/{userId}/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<CartItem> updateCartItem(@RequestHeader("Authorization") String jwt, @PathVariable Long id, @RequestBody CartItem cartItem) {
         try {
         	User user=userService.findUserProfileByJwt(jwt);
