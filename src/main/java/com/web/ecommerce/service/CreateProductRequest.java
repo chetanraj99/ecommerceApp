@@ -14,7 +14,7 @@ public class CreateProductRequest {
 	private String title;
 	private String description;
 	private int price;
-	private int discountPrive;
+	private int discountedPrice;
 	
 	private int discountPercent;
 	private int quantity;
@@ -23,8 +23,8 @@ public class CreateProductRequest {
 	private Set<Size> size=new HashSet<>();
 	private String imageUrl;
 	
-	private String topLavelCategory;
-	private String secondLavelCategory;
-	private String thirdLavelCategory;
+	private String topLevelCategory;
+	private String secondLevelCategory;
+	private String thirdLevelCategory;
 
 }

@@ -58,10 +58,11 @@ public class OrderServiceImplementation implements OrderService {
 			OrderItem createdOrderItem=orderItemRepository.save(orderItem);
 			orderItems.add(createdOrderItem);
 		}
-		
+
 		Order createdOrder=new Order();
 		createdOrder.setUser(user);
 		createdOrder.setOrderItems(orderItems);
+		createdOrder.setDiscount(cart.getDiscount());
 		createdOrder.setTotalPrice(cart.getTotalPirce());
 		createdOrder.setTotalDiscountedPrice(cart.getTotalDiscountedPrice());
 		createdOrder.setTotalItem(cart.getTotalItem());

@@ -31,27 +31,27 @@ public class ProductServiceImplementation implements ProductService {
 	
 	@Override
 	public Product createProduct(CreateProductRequest req) {
-		Category topLevel=categoryRepository.findByName(req.getTopLavelCategory());
+		Category topLevel=categoryRepository.findByName(req.getTopLevelCategory());
 		if(topLevel==null) {
 			Category topLevelCategory=new Category();
-			topLevelCategory.setName(req.getTopLavelCategory());
+			topLevelCategory.setName(req.getTopLevelCategory());
 			topLevelCategory.setLevel(1);
 			topLevel=categoryRepository.save(topLevelCategory);
 		}
 		System.out.println(topLevel);
-		Category secondLevel=categoryRepository.findByNameAndParent(req.getSecondLavelCategory(),topLevel.getName());
+		Category secondLevel=categoryRepository.findByNameAndParent(req.getSecondLevelCategory(),topLevel.getName());
 		if(secondLevel==null) {
 			Category secondLevelCategory=new Category();
-			secondLevelCategory.setName(req.getSecondLavelCategory());
+			secondLevelCategory.setName(req.getSecondLevelCategory());
 			secondLevelCategory.setParentCategory(topLevel);
 			secondLevelCategory.setLevel(2);
 			secondLevel=categoryRepository.save(secondLevelCategory);
 		}
 		
-		Category thirdLevel=categoryRepository.findByNameAndParent(req.getThirdLavelCategory(),secondLevel.getName());
+		Category thirdLevel=categoryRepository.findByNameAndParent(req.getThirdLevelCategory(),secondLevel.getName());
 		if(thirdLevel==null) {
 			Category thirdLevelCategory=new Category();
-			thirdLevelCategory.setName(req.getThirdLavelCategory());
+			thirdLevelCategory.setName(req.getThirdLevelCategory());
 			thirdLevelCategory.setParentCategory(secondLevel);
 			thirdLevelCategory.setLevel(3);
 			thirdLevel=categoryRepository.save(thirdLevelCategory);
@@ -61,7 +61,7 @@ public class ProductServiceImplementation implements ProductService {
 		product.setTitle(req.getTitle());
 		product.setColor(req.getColor());
 		product.setDiscription(req.getDescription());
-		product.setDiscountedPrice(req.getDiscountPercent());
+		product.setDiscountedPrice(req.getDiscountedPrice());
 		product.setDiscountPercent(req.getDiscountPercent());
 		product.setImageUrl(req.getImageUrl());
 		product.setBrand(req.getBrand());
