@@ -31,20 +31,23 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http.csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .authorizeHttpRequests(auth -> auth.requestMatchers("/home/signup").permitAll())
-            .authorizeHttpRequests(auth -> auth.requestMatchers("/home/**")
-                    .authenticated().requestMatchers("/auth/login")
-                    .permitAll().anyRequest()
-                    .authenticated()).exceptionHandling(ex -> ex.authenticationEntryPoint(point))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/home/signup").permitAll()
+                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/api/products/**").permitAll()
+                        .requestMatchers("/home/**").authenticated()
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
-        
+
         return http.build();
     }
+
     
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
